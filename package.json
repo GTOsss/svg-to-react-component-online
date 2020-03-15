@@ -1,0 +1,36 @@
+{
+  "name": "svg-to-react-component-online",
+  "version": "1.0.0",
+  "description": "Svg to react component online",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/server.js",
+    "dev": "nodemon ./bin/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GTOsss/svg-to-react-component-online.git"
+  },
+  "keywords": [
+    "svg",
+    "react",
+    "svgr"
+  ],
+  "author": "Timofey Goncharov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GTOsss/svg-to-react-component-online/issues"
+  },
+  "homepage": "https://github.com/GTOsss/svg-to-react-component-online#readme",
+  "dependencies": {
+    "@svgr/core": "^5.2.0",
+    "archiver": "^3.1.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "multer": "^1.4.2",
+    "uuid": "^7.0.2"
+  }
+}
