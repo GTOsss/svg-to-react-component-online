@@ -1,3 +1,4 @@
+const path = require('path');
 const router = require('express').Router();
 const svgr = require('@svgr/core').default;
 const camelCase = require('lodash/camelCase');
@@ -40,7 +41,8 @@ router.post('/', async ({ files, body }, res, next) => {
 
     const id = uuid();
     fs.mkdirSync(__dirname + `../../storage/${id}`);
-    const output = fs.createWriteStream(__dirname + `../../storage/${id}/svg-to-react.zip`);
+    const pathToStorage = path.resolve(__dirname + `/../../storage/${1}/svg-to-react.zip`);
+    const output = fs.createWriteStream(pathToStorage);
 
     archive.on('finish', () => {
       console.log(`Success archived: ${archive.pointer()} bytes`);
