@@ -41,7 +41,9 @@ router.post('/', async ({ files, body }, res, next) => {
 
     const id = uuid();
     const pathToStorage = path.resolve(__dirname + `/../../storage`);
-    fs.mkdirSync(pathToStorage);
+    if (!fs.existsSync(pathToStorage)) {
+      fs.mkdirSync(pathToStorage);
+    }
     const pathToArchive = path.resolve(__dirname + `/../../storage/${id}/svg-to-react.zip`);
     const output = fs.createWriteStream(pathToArchive);
     archive.on('finish', () => {
