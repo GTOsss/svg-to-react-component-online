@@ -18,6 +18,9 @@
     "svgr"
   ],
   "author": "Timofey Goncharov",
+  "contributors": [
+    "Alexey Gostev <algost96@mail.ru>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/GTOsss/svg-to-react-component-online/issues"
@@ -25,6 +28,8 @@
   "homepage": "https://github.com/GTOsss/svg-to-react-component-online#readme",
   "dependencies": {
     "@svgr/core": "^5.2.0",
+    "@svgr/plugin-prettier": "^5.0.1",
+    "@svgr/plugin-svgo": "^5.2.0",
     "archiver": "^3.1.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

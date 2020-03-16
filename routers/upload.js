@@ -2,28 +2,37 @@ const router = require('express').Router();
 const svgr = require('@svgr/core').default;
 const camelCase = require('lodash/camelCase');
 const upperFirst = require('lodash/upperFirst');
+const lowerCase = require('lodash/lowerCase');
+const kebabCase = require('lodash/kebabCase');
 const archiver = require('archiver');
 const fs = require('fs');
 const uuid = require('uuid').v4;
+const { createIndexFile, createDemoHtml } = require('../utils/code-generator');
 
 // POST
-router.post('/', async ({ files }, res, next) => {
+router.post('/', async ({ files, body }, res, next) => {
   try {
+    const plugins = JSON.parse(body.plugins);
+    const settings = JSON.parse(body.settings);
+    const additionalSettings = JSON.parse(body.additionalSettings);
+
     const svgElements = files.map(({ buffer, originalname }) => ({
-      name: originalname.slice(0, -4),
+      name: kebabCase(lowerCase(originalname.slice(0, -4))),
       code: buffer.toString(),
     }));
 
-    const fileExt = 'jsx';
+    const svgrOptions = { ...settings, plugins };
 
-    const results = svgElements.map(({ code, name }) => ({
-      name,
-      code: svgr.sync(
-        code,
-        { icon: true },
-        { componentName: upperFirst(camelCase(name)) },
-      ),
-    }));
+    const results = [];
+    const filenames = [];
+
+    svgElements.forEach(({ code, name }) => {
+      results.push({
+        name,
+        code: svgr.sync(code, svgrOptions, { componentName: upperFirst(camelCase(name)) }),
+      });
+      filenames.push(name);
+    });
 
     const archive = archiver('zip', {
       zlib: { level: 9 },
@@ -39,12 +48,21 @@ router.post('/', async ({ files }, res, next) => {
 
     archive.pipe(output);
 
+    const fileExtension = JSON.parse(body.settings).ext;
+
     results.forEach(({ name, code }) => {
-      archive.append(Buffer.from(code), { name: `${name}.${fileExt}` });
+      archive.append(Buffer.from(code), { name: `${name}.${fileExtension}` });
     });
+    if (additionalSettings.generateIndexFile) {
+      archive.append(Buffer.from(createIndexFile(filenames)), { name: `index.${fileExtension}` });
+    }
+    if (additionalSettings.generateDemo) {
+      archive.append(Buffer.from(createDemoHtml(svgElements)), { name: 'demo.html' });
+    }
+
     archive.finalize();
 
-    res.status(200).json({path: `/download/${id}/svg-to-react.zip`});
+    res.status(200).json({ path: `/download/${id}/svg-to-react.zip` });
   } catch (e) {
     next(e);
   }
