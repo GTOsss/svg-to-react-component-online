@@ -44,8 +44,10 @@ router.post('/', async ({ files, body }, res, next) => {
     if (!fs.existsSync(pathToStorage)) {
       fs.mkdirSync(pathToStorage);
     }
-    const pathToArchive = path.resolve(__dirname + `/../storage/${id}/svg-to-react.zip`);
-    const output = fs.createWriteStream(pathToArchive);
+    const pathToArchiveDir = path.resolve(__dirname + `/../storage/${id}`);
+    const pathToArchiveFile = `${pathToArchiveDir}/svg-to-react.zip`;
+    fs.mkdirSync(pathToArchiveDir);
+    const output = fs.createWriteStream(pathToArchiveFile);
     archive.on('finish', () => {
       console.log(`Success archived: ${archive.pointer()} bytes`);
     });
