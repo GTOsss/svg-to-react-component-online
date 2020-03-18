@@ -1,0 +1,9 @@
+[Unit]
+Description=Delete after 1 days
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c " find /projects/svg-to-react-component-online/svg-to-react-component-online/storage -type f -mtime +1 -exec rm -rf {} \; -prune "
+
+[Install]
+WantedBy=multi-user.target
